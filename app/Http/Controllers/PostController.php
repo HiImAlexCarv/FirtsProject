@@ -15,7 +15,7 @@ class PostController extends Controller
     {
         $posts = Post::get();
 
-        return view('blog', ['posts' => $posts]);
+        return view('posts.index', ['posts' => $posts]);
     }
 
     /**
@@ -23,7 +23,7 @@ class PostController extends Controller
      */
     public function create()
     {
-        //
+        return view('posts.create');
     }
 
     /**
@@ -31,15 +31,28 @@ class PostController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request ->validate( [
+            'title' => ['required'],
+            'body' => ['required']
+        ]);
+
+
+        $post = new Post;
+        $post -> title =$request->input('title');
+        $post -> body =$request->input('body');
+        $post->save();
+
+        session()->flash('status', 'Post creado!');
+
+        return to_route('posts.index');
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(Post $post)
     {
-        //
+       return view('posts.show', ['post' => $post]);
     }
 
     /**
