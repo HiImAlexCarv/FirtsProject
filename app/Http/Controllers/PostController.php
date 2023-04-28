@@ -58,17 +58,30 @@ class PostController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(Post $post)
     {
-        //
+        return view('posts.edit', ['post' => $post]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, Post $post)
     {
-        //
+        $request ->validate( [
+            'title' => ['required'],
+            'body' => ['required']
+        ]);
+
+
+        
+        $post -> title =$request->input('title');
+        $post -> body =$request->input('body');
+        $post->save();
+
+        session()->flash('status', 'Post actualizado!');
+
+        return to_route('posts.show', $post);
     }
 
     /**
